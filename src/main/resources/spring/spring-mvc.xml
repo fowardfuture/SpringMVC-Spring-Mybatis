@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xsi:schemaLocation=" http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+                            http://www.springframework.org/schema/mvc
+                            http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+                            http://www.springframework.org/schema/context
+                            http://www.springframework.org/schema/context/spring-context-4.2.xsd"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans">
+
+    <!-- 自动扫描该包，SpringMVC会将包下用了@controller注解的类注册为Spring的controller -->
+
+
+    <context:component-scan base-package="com.action.controller"/>
+
+    <!-- 默认配置方案 //在使用@Responesbody的时候返回的json格式为ISO-8859-1-->
+
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8" />
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 使用默认的Servlet来响应静态文件 -->
+
+
+    <mvc:default-servlet-handler/>
+
+    <!-- 视图解析器 -->
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/*"/>
+            <bean class="com.action.controller.Interceptor.UserIntercertor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="viewResolver">
+
+        <!-- 前缀 -->
+
+
+
+        <property name="prefix">
+
+            <value>/WEB-INF/views/</value>
+
+        </property>
+
+        <!-- 后缀 -->
+
+
+
+        <property name="suffix">
+
+            <value>.jsp</value>
+
+        </property>
+
+    </bean>
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize">
+            <value>10485760</value>
+        </property>
+        <property name="defaultEncoding">
+            <value>UTF-8</value>
+        </property>
+
+    </bean>
+</beans>
